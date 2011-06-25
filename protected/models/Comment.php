@@ -95,22 +95,20 @@ class Comment extends CActiveRecord {
         ));
     }
 
-    public function createEntity($name, $pk) {
+    public function createEntity($name, $pk = null) {
         $dirrectories = explode(PATH_SEPARATOR, get_include_path());
-
+        $fileExists = false;
         foreach ($dirrectories as $dir) {
             if (file_exists($dir . '/' . $name . '.php')) {
                 $fileExists = true;
             }
         }
-
         if (!$fileExists) return false;
 
         if ($pk === null) {
             $entity = call_user_func(array($name, 'model'));
         } else {
-            $entity = call_user_func(array($name, 'model'));
-            $entity = $entity->findByPk($pk);
+            $entity = call_user_func(array($name, 'model'))->findByPk($pk);
         }
         return $entity;
     }

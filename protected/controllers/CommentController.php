@@ -60,7 +60,7 @@ class CommentController extends Controller {
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-        $entity = $model->createEntity(htmlspecialchars($_GET['entity']), (int)$_GET['entity_id']);
+        $entity = $model->createEntity(htmlspecialchars($_GET['entity'], (int) $_GET['enitity_id']));
         if (isset($_POST['Comment'])) {
             $model->attributes = $_POST['Comment'];
             if ($model->save()) {
@@ -162,8 +162,10 @@ class CommentController extends Controller {
         }
     }
 
-    protected function addComment(Comment $model) {
-        $entity = $model->createEntity($_POST['CommentRelation']['model_name'],$_POST['CommentRelation']['model_id']);
+    protected function addComment($model) {
+        $commentRelation = new CommentRelation();
+        $commentRelation->attributes = $_POST['CommentRelation'];
+        $entity = call_user_func($commentRelation->model_name . "::model");
         $entity->attachBehavior('CommentableBehavior', new CommentableBehavior());
         $entity->addComment($model);
     }
