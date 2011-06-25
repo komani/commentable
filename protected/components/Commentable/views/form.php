@@ -22,12 +22,6 @@
 		<?php echo $form->error($model,'text'); ?>
 	</div>
 	
-	<div class="row">
-		<?php echo $form->labelEx($model,'date'); ?>
-		<?php echo $form->textField($model,'date',array('value'=>date('Y-m-d H:i'))); ?>
-		<?php echo $form->error($model,'date'); ?>
-	</div>
-	
 	<?php $commentRelation = new CommentRelation()?>
 	
 	<?php echo $form->hiddenField($commentRelation,'model_id', array('value'=>$entity->id)); ?>

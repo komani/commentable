@@ -19,5 +19,5 @@
 	<b><?php echo CHtml::encode($data->getAttributeLabel('parent_id')); ?>:</b>
 	<?php echo CHtml::encode($data->parent_id); ?>
 	<br />
-	<a href="/comment/create/parent_id/<?=$data->id?>/entity/<?=get_class($entity)?>/entity_id/<?=$entity->id?>">Ответить</a>
+	<a href="/comment/create/parent_id/<?=$data->id?>/entity/<?=get_class($entity)?>/entity_id/<?=$entity->id?>">Answer</a>
 </div>
