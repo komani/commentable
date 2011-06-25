@@ -29,10 +29,9 @@
 	</div>
 	
 	<?php $commentRelation = new CommentRelation()?>
-	
 	<?php echo $form->hiddenField($commentRelation,'model_id', array('value'=>$entity->id)); ?>
  	<?php echo $form->hiddenField($commentRelation,'model_name', array('value'=>get_class($entity))); ?>
- 	<?php echo $form->hiddenField($model,'parent_id'); ?>
+ 	<?php echo $form->hiddenField($model,'parent_id',array('value'=>array_key_exists('parent_id',$_REQUEST) && 0!= (int)$_REQUEST['parent_id']?$_REQUEST['parent_id']:'')); ?>
 	
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
