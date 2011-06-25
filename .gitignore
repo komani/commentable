@@ -1,5 +1,5 @@
 protected/config/
-protected/assets/*
+protected/assets/
 .idea/
 .DS_Store
 /protected/runtime/
