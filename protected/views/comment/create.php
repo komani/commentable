@@ -12,4 +12,6 @@ $this->menu=array(
 
 <h1>Create Comment</h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php $this->widget('application.components.Commentable.Form', array(
+    'entity' => $entity
+)); ?>
