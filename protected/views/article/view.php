@@ -25,7 +25,8 @@ $this->menu = array(
 )); ?>
 
 <?php $this->widget('application.components.Commentable.Tree', array(
-    'entity' => $model
+    'entity' => $model,
+    'showDeleteLink' => !Yii::app()->user->isGuest
 )); ?>
 <?php $this->widget('application.components.Commentable.Form', array(
     'entity' => $model

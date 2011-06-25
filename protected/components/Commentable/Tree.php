@@ -8,12 +8,13 @@
 class Tree extends CWidget {
 	
 	public $entity;
-	
+
+    public $showDeleteLink;
     public function run() {
     	if($this->entity ===null){
     		throw new Exception("Entity can`t be null");
     	}
-        $this->render('tree',array('entity'=>$this->entity));
+        $this->render('tree',array('entity'=>$this->entity,'showDeleteLink'=>$this->showDeleteLink));
     }
 }
 ?>

@@ -20,4 +20,7 @@
 	<?php echo CHtml::encode($data->parent_id); ?>
 	<br />
 	<a href="/comment/create/parent_id/<?=$data->id?>/entity/<?=get_class($entity)?>/entity_id/<?=$entity->id?>">Answer</a>
+    <?php if($showDeleteLink): ?>
+	    <a href="/comment/delete/<?=$data->id ?>">Delete</a>
+    <?php endif; ?>
 </div>
