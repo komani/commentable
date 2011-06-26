@@ -4,10 +4,13 @@
 		convertNoticesToExceptions="true"
 		convertWarningsToExceptions="true"
 		stopOnFailure="false">
-
+    <logging>
+        <log type="coverage-html" target="./reports" charset="UTF-8"
+            yui="true" highlight="true"
+            lowUpperBound="50" highLowerBound="80"/>
+    </logging>
 	<selenium>
-		<browser name="Internet Explorer" browser="*iexplore" />
+		<browser name="Internet Explorer" browser="*firefox" />
 		<browser name="Firefox" browser="*firefox" />
 	</selenium>
-
 </phpunit>

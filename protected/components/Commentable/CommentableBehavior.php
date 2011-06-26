@@ -13,6 +13,9 @@ class CommentableBehavior extends CActiveRecordBehavior {
      * if not, add create new comment and attach it to current model
      */
     public function addComment(Comment $comment) {
+        if($this->getOwner()->isNewRecord){
+            return false;
+        }
         $relationAttributes = array(
             'comment_id' => $comment->id,
             'model_id' => $this->getOwner()->id,
@@ -35,13 +38,15 @@ class CommentableBehavior extends CActiveRecordBehavior {
      * @param $comment - comment AR
      */
     public function deleteComment(Comment $comment) {
-        $commentRelation = CommentRelation::model()
-                ->findByAttributes(
-            array(
+        $commentRelationAttributes = array(
                 'comment_id' => $comment->id,
                 'model_id' => $this->getOwner()->id,
                 'model_name' => get_class($this->getOwner())
-            ))->delete();
+            );
+        $commentRelation = CommentRelation::model()->findByAttributes($commentRelationAttributes);
+        if($commentRelation!==null && $commentRelation instanceof CommentRelation){
+            $commentRelation->delete();
+        }
     }
 
     /**

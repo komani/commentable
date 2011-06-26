@@ -2,4 +2,5 @@ protected/config/
 assets/*
 .idea/
 .DS_Store
-/protected/runtime/
+protected/runtime/
+nbproject/

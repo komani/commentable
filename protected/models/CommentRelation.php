@@ -38,8 +38,8 @@ class CommentRelation extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('comment_id, model_name', 'required'),
-			array('comment_id', 'numerical', 'integerOnly'=>true),
+			array('model_id, comment_id, model_name', 'required'),
+			array('model_id, comment_id', 'numerical', 'integerOnly'=>true),
 			array('model_name', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
