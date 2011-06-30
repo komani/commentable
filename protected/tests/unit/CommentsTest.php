@@ -1,5 +1,6 @@
 <?php
 class CommentsTest extends CDbTestCase {
+
     public $fixtures = array(
         'articles' => 'Article',
         'comments' => 'Comment',
@@ -27,7 +28,7 @@ class CommentsTest extends CDbTestCase {
     public function testAttachCommentToArticle() {
         $article = $this->articles('sample1');
         $article->save();
-        $article->attachBehavior('CommentableBehavior', new CommentableBehavior())
+        $article->attachBehavior('CommentableBehavior', new CommentableBehavior());
 
         $comments = $article->findComments();
         foreach($comments as $comment){
@@ -37,17 +38,15 @@ class CommentsTest extends CDbTestCase {
         $comment = $this->comments('sample1');
         $article->addComment($comment);
         $comments = $article->findComments();
-        
-        $this->assertTrue(count($comments) != 0);
-        CVarDumper::dump(count($comments));
 
+        $this->assertTrue(count($comments) != 0);
         $this->assertTrue(count($comments) == 1);
         $this->assertTrue($comments[0] instanceof Comment);
         $this->assertEquals($comment->name, $comments[0]->name);
     }
 
 
-    public function testFindComments()
+   public function testFindComments()
     {
         $article1 = $this->articles('sample1');
         $article1->save();
@@ -56,8 +55,10 @@ class CommentsTest extends CDbTestCase {
         foreach($comments as $comment){
             $article1->deleteComment($comment);
         }
-        
+
+
         $article2  = $this->articles('sample2');
+        $article2->attachBehavior('CommentableBehavior', new CommentableBehavior());
         $article2->save();
         $comments = $article2->findComments();
         foreach($comments as $comment){
@@ -67,13 +68,20 @@ class CommentsTest extends CDbTestCase {
         $article2->attachBehavior('CommentableBehavior', new CommentableBehavior());
 
         $article1->addComment($this->comments('sample1'));
-        $article1->addComments($this->comments('sample2'));
+        $article1->addComment($this->comments('sample2'));
 
         $article2->addComment($this->comments('sample3'));
-        $article2->addComments($this->comments('sample4'));
+        $article2->addComment($this->comments('sample4'));
 
         $comments1 = $article1->findComments();
+        $comments2 = $article2->findComments();
+
         $this->assertTrue(count($comments1)==2);
+        $this->assertTrue(count($comments2)==2);
+
+        foreach($comments1+$comments2 as $comment){
+            $this->assertTrue($comment instanceof Comment);
+        }
     }
 
     public function testDeleteComment() {
@@ -90,4 +98,15 @@ class CommentsTest extends CDbTestCase {
         $comments = $article->findComments();
         $this->assertTrue(count($comments)==0);
     }
+
+    public function testNewArticle()
+    {
+        $article = new Article();
+        $article->attributes = $this->articles['sample1'];
+        $article->attachBehavior('CommentableBehavior', new CommentableBehavior());
+        $comment =  $this->comments('sample1');
+        $this->assertFalse($article->addComment($comment));
+        $this->assertEquals(count($article->findComments()),0);
+    }
+
 }

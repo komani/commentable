@@ -53,10 +53,13 @@ class CommentableBehavior extends CActiveRecordBehavior {
      * Find all comments for current AR
      */
     public function findComments() {
+        if($this->getOwner()->isNewRecord){
+            return array();
+        }
         $criteria = new CDbCriteria();
-        $criteria->join = '`comment_relation` on `comment_relation`.comment_id  = `t`.id';
+        $criteria->join .= 'LEFT JOIN `comment_relation` on `comment_relation`.comment_id  = `t`.id';
         $criteria->condition = '`comment_relation`.model_id = ' . $this->getOwner()->id;
         $criteria->addCondition("`comment_relation`.model_name = '" . get_class($this->getOwner()) . "'");
-        return Comment::model()->findAll();
+        return Comment::model()->findAll($criteria);
     }
 }
