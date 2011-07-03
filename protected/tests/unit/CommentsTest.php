@@ -109,4 +109,25 @@ class CommentsTest extends CDbTestCase {
         $this->assertEquals(count($article->findComments()),0);
     }
 
+    public function testArticleDelete()
+    {
+        $article = $this->articles('sample1');
+        $article->attachBehavior('CommentableBehavior', new CommentableBehavior());
+        $comments = $article->findComments();
+        $id = $article->id;
+        $article->delete();
+
+        $commentRelations = CommentRelation::model()->findAll();
+        foreach($commentRelations as $commentRelation){
+            $this->assertNotEquals($id,$commentRelation->model_id);
+        }
+
+        foreach($comments as $comment){
+            $dbComment = Comment::model()->findByPk($comment->id);
+            $this->assertEquals(null,$dbComment);
+        }
+
+        $dbArticle = Article::model()->findByPk($id);
+        $this->assertEquals(null,$dbArticle);
+    }
 }

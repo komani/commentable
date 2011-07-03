@@ -13,7 +13,7 @@ class CommentableBehavior extends CActiveRecordBehavior {
      * if not, add create new comment and attach it to current model
      */
     public function addComment(Comment $comment) {
-        if($this->getOwner()->isNewRecord){
+        if ($this->getOwner()->isNewRecord) {
             return false;
         }
         $relationAttributes = array(
@@ -39,12 +39,12 @@ class CommentableBehavior extends CActiveRecordBehavior {
      */
     public function deleteComment(Comment $comment) {
         $commentRelationAttributes = array(
-                'comment_id' => $comment->id,
-                'model_id' => $this->getOwner()->id,
-                'model_name' => get_class($this->getOwner())
-            );
+            'comment_id' => $comment->id,
+            'model_id' => $this->getOwner()->id,
+            'model_name' => get_class($this->getOwner())
+        );
         $commentRelation = CommentRelation::model()->findByAttributes($commentRelationAttributes);
-        if($commentRelation!==null && $commentRelation instanceof CommentRelation){
+        if ($commentRelation !== null && $commentRelation instanceof CommentRelation) {
             $commentRelation->delete();
         }
     }
@@ -53,7 +53,7 @@ class CommentableBehavior extends CActiveRecordBehavior {
      * Find all comments for current AR
      */
     public function findComments() {
-        if($this->getOwner()->isNewRecord){
+        if ($this->getOwner()->isNewRecord) {
             return array();
         }
         $criteria = new CDbCriteria();
@@ -61,5 +61,15 @@ class CommentableBehavior extends CActiveRecordBehavior {
         $criteria->condition = '`comment_relation`.model_id = ' . $this->getOwner()->id;
         $criteria->addCondition("`comment_relation`.model_name = '" . get_class($this->getOwner()) . "'");
         return Comment::model()->findAll($criteria);
+    }
+
+
+    public function beforeDelete($event) {
+        $comments = $this->findComments();
+        foreach ($comments as $comment) {
+            $this->deleteComment($comment);
+            $comment->delete();
+        }
+        return parent::beforeDelete($event);
     }
 }
