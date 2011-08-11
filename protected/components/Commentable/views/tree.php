@@ -9,7 +9,9 @@ function tree($comments, $parent, $i, $widget, $entity, $showDeleteLink) {
                 'data' => $comment,
                 'margin' => $i,
                 'entity' => $entity,
-                'showDeleteLink' => $showDeleteLink));
+                'showDeleteLink' => $showDeleteLink,
+                'showAnswerButton'=>true
+            ));
             tree($comments, $comment->id, $i, $widget, $entity, $showDeleteLink);
         }
     }

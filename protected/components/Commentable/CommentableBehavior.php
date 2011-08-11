@@ -65,11 +65,19 @@ class CommentableBehavior extends CActiveRecordBehavior {
 
 
     public function beforeDelete($event) {
+        $this->deleteComments();
+        return parent::beforeDelete($event);
+    }
+
+    /**
+     * @return void
+     * remove All comments
+     */
+    public function deleteComments() {
         $comments = $this->findComments();
         foreach ($comments as $comment) {
             $this->deleteComment($comment);
             $comment->delete();
         }
-        return parent::beforeDelete($event);
     }
 }

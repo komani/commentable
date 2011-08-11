@@ -114,13 +114,20 @@ class Comment extends CActiveRecord {
             }
         }
         if (!$fileExists) return false;
-
-        if ($pk === null) {
-            $entity = call_user_func(array($name, 'model'));
-        } else {
-            $entity = call_user_func(array($name, 'model'))->findByPk($pk);
+        $entity = call_user_func(array($name, 'model'));
+        if (!$entity instanceof CActiveRecord) return false;
+        if ($pk !== null) {
+            $entity = $entity->findByPk($pk);
         }
+
         return $entity;
     }
 
+    public function getOwner() {
+        $commentRelation = CommentRelation::model()->findByAttributes(array('comment_id' => $this->id));
+        if ($commentRelation) {
+            $entity = $this->createEntity($commentRelation->model_name, $commentRelation->model_id);
+            return $entity;
+        }
+    }
 }

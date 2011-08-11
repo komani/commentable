@@ -112,7 +112,13 @@ class CommentsTest extends CDbTestCase {
     public function testArticleDelete()
     {
         $article = $this->articles('sample1');
+
         $article->attachBehavior('CommentableBehavior', new CommentableBehavior());
+        $article->deleteComments();
+
+        $comment = $this->comments('sample1');
+        $article->addComment($comment);
+
         $comments = $article->findComments();
         $id = $article->id;
         $article->delete();
@@ -129,5 +135,43 @@ class CommentsTest extends CDbTestCase {
 
         $dbArticle = Article::model()->findByPk($id);
         $this->assertEquals(null,$dbArticle);
+    }
+
+    public function testGetOwner()
+    {
+        $article = $this->articles('sample1');
+        $article->attachBehavior('CommentableBehavior', new CommentableBehavior());
+        $article->deleteComments();
+        $comment = $this->comments('sample1');
+        $article->addComment($comment);
+
+        $owner = $comment->getOwner();
+
+        $this->assertTrue($owner instanceof Article);
+        foreach($owner->attributes as $key=>$value){
+            $this->assertEquals($value, $article->attributes[$key]);
+        }
+    }
+
+
+    public function testCreateEntity()
+    {
+        $article = $this->articles('sample1');
+        $comment = Comment::model();
+        $entity = $comment->createEntity(get_class($article),$article->id);
+        $this->assertTrue($entity instanceof Article);
+        foreach($entity->attributes as $key=>$value){
+            $this->assertEquals($value,$article->attributes[$key]);
+        }
+
+        $entity = $comment->createEntity(get_class($article));
+        $this->assertTrue($entity instanceof Article);
+        foreach($entity->attributes  as $value){
+            $this->assertEquals(null , $value);
+        }
+        $entity = $comment->createEntity("test");
+        $this->assertFalse($entity);
+        $entity = $comment->createEntity("CommentController");
+        $this->assertFalse($entity);
     }
 }
